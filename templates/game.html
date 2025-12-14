@@ -375,6 +375,9 @@
 {% endblock %}
 
 {% block content %}
+<audio id="bgMusic" loop preload="auto">
+    <source src="{{ url_for('static', filename='audio/AUDIO_0437.mp3') }}" type="audio/mpeg">
+</audio>
 <canvas id="gameCanvas"></canvas>
 <canvas id="minimap"></canvas>
 <div id="damageOverlay"></div>
@@ -445,6 +448,10 @@
             <label>BUTTON SIZE (MOBILE)</label>
             <input type="range" id="buttonSizeSlider" min="50" max="150" value="100">
             <span id="buttonSizeValue">100%</span>
+        </div>
+        <div class="setting-item">
+            <label>MUSIC</label>
+            <button onclick="toggleMusic()" id="musicBtn">MUTE</button>
         </div>
         <div class="setting-item">
             <label>DISPLAY MODE</label>

@@ -93,6 +93,46 @@ window.closeSettings = function() {
     document.getElementById('settingsModal').classList.remove('active');
 };
 
+// Background Music
+const bgMusic = document.getElementById('bgMusic');
+let musicMuted = localStorage.getItem('duum_music_muted') === 'true';
+
+function initMusic() {
+    if (bgMusic) {
+        bgMusic.volume = 0.5;
+        bgMusic.muted = musicMuted;
+        updateMusicButton();
+        // Autoplay requires user interaction, so we try on first click/touch
+        const startMusic = () => {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener('click', startMusic);
+            document.removeEventListener('touchstart', startMusic);
+            document.removeEventListener('keydown', startMusic);
+        };
+        document.addEventListener('click', startMusic);
+        document.addEventListener('touchstart', startMusic);
+        document.addEventListener('keydown', startMusic);
+    }
+}
+
+function updateMusicButton() {
+    const btn = document.getElementById('musicBtn');
+    if (btn) {
+        btn.textContent = musicMuted ? 'UNMUTE' : 'MUTE';
+    }
+}
+
+window.toggleMusic = function() {
+    musicMuted = !musicMuted;
+    localStorage.setItem('duum_music_muted', musicMuted);
+    if (bgMusic) {
+        bgMusic.muted = musicMuted;
+    }
+    updateMusicButton();
+};
+
+initMusic();
+
 window.saveSettings = function() {
     const sensValue = document.getElementById('sensitivitySlider').value;
     localStorage.setItem('duum_sensitivity', sensValue);
