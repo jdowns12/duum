@@ -1,0 +1,18 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Database
+data/
+
+# Environment files
+.env
+
+# IDE
+.vscode/
+.idea/

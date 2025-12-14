@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+
+{% block title %}DUUM - Playing{% endblock %}
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+    * { touch-action: none; }
+    body { margin: 0; overflow: hidden; background: #000; }
+    .container { padding: 0; max-width: none; }
+    #gameCanvas { display: block; margin: 0 auto; }
+    #hud {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
+        border-top: 3px solid #8B0000;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-family: 'Courier New', monospace;
+        z-index: 100;
+    }
+    .hud-item {
+        text-align: center;
+        color: #ff4444;
+    }
+    .hud-value {
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 0 0 10px #ff0000;
+    }
+    .hud-label {
+        font-size: 10px;
+        color: #888;
+    }
+    #minimap {
+        position: absolute;
+        top: 70px;
+        left: 10px;
+        width: 100px;
+        height: 100px;
+        background: rgba(0,0,0,0.7);
+        border: 2px solid #8B0000;
+        z-index: 50;
+    }
+    #gameOver {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.95);
+        padding: 30px;
+        border: 3px solid #8B0000;
+        text-align: center;
+        z-index: 200;
+        width: 90%;
+        max-width: 400px;
+    }
+    #gameOver h1 { color: #ff0000; font-size: 36px; margin-bottom: 15px; }
+    #gameOver input {
+        background: #1a1a1a;
+        border: 2px solid #8B0000;
+        color: #ff4444;
+        padding: 12px 20px;
+        font-size: 18px;
+        margin: 10px;
+        width: 80%;
+    }
+    #gameOver button {
+        background: #8B0000;
+        border: none;
+        color: white;
+        padding: 15px 25px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 5px;
+        border-radius: 5px;
+    }
+    #gameOver button:hover, #gameOver button:active { background: #ff0000; }
+
+    .settings-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    .settings-modal.active { display: flex; }
+    .settings-content {
+        background: linear-gradient(to bottom, #1a0a0a, #0a0000);
+        border: 3px solid #8B0000;
+        padding: 40px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+    }
+    .settings-content h2 {
+        color: #ff4444;
+        font-size: 32px;
+        margin-bottom: 30px;
+        text-shadow: 0 0 10px #ff0000;
+    }
+    .setting-item { margin: 25px 0; text-align: left; }
+    .setting-item label {
+        display: block;
+        color: #ff6666;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    .setting-item input[type="range"] {
+        width: 80%;
+        height: 8px;
+        background: #333;
+        -webkit-appearance: none;
+    }
+    .setting-item input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #ff4444;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .setting-item span {
+        color: #ff4444;
+        font-size: 18px;
+        margin-left: 15px;
+        font-weight: bold;
+    }
+    .settings-content button {
+        background: #8B0000;
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px;
+    }
+    .settings-content button:hover { background: #ff0000; }
+
+    /* Mobile Controls */
+    #mobileControls {
+        display: none;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 50px;
+        pointer-events: none;
+        z-index: 100;
+    }
+
+    /* Movement Joystick - Bottom left */
+    #joystickArea {
+        position: absolute;
+        left: 20px;
+        bottom: 15px;
+        width: 120px;
+        height: 120px;
+        pointer-events: auto;
+        touch-action: none;
+    }
+
+    #joystickBase {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: rgba(139, 0, 0, 0.4);
+        border: 3px solid rgba(255, 68, 68, 0.5);
+        border-radius: 50%;
+        left: 10px;
+        top: 10px;
+    }
+
+    #joystickThumb {
+        position: absolute;
+        width: 45px;
+        height: 45px;
+        background: radial-gradient(circle, rgba(255, 68, 68, 0.8), rgba(139, 0, 0, 0.8));
+        border: 2px solid rgba(255, 102, 102, 0.7);
+        border-radius: 50%;
+        left: 37px;
+        top: 37px;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+        touch-action: none;
+    }
+
+    /* Turn Buttons - Next to joystick */
+    #turnLeft, #turnRight {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background: rgba(139, 0, 0, 0.6);
+        border: 3px solid rgba(255, 68, 68, 0.6);
+        border-radius: 50%;
+        pointer-events: auto !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 0 5px #000;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        z-index: 110;
+    }
+
+    #turnLeft {
+        left: 150px;
+        bottom: 80px;
+    }
+
+    #turnRight {
+        left: 220px;
+        bottom: 80px;
+    }
+
+    #turnLeft:active, #turnRight:active {
+        background: rgba(255, 68, 68, 0.9);
+        transform: scale(0.95);
+    }
+
+    /* Fire Button - Bottom right */
+    #fireButton {
+        position: absolute;
+        right: 20px;
+        bottom: 15px;
+        width: 90px;
+        height: 90px;
+        background: radial-gradient(circle, rgba(255, 0, 0, 0.6), rgba(139, 0, 0, 0.6));
+        border: 4px solid rgba(255, 68, 68, 0.6);
+        border-radius: 50%;
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 0 10px #000;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        touch-action: none;
+    }
+
+    #fireButton:active {
+        background: radial-gradient(circle, rgba(255, 68, 68, 0.9), rgba(255, 0, 0, 0.9));
+        transform: scale(0.95);
+    }
+
+    /* Nuke Button */
+    #flipButton {
+        position: absolute;
+        right: 130px;
+        bottom: 25px;
+        width: 65px;
+        height: 65px;
+        background: rgba(139, 0, 0, 0.5);
+        border: 3px solid rgba(255, 68, 68, 0.5);
+        border-radius: 50%;
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        touch-action: none;
+    }
+
+    #flipButton:active {
+        background: rgba(255, 0, 0, 0.7);
+        transform: scale(0.95);
+    }
+
+    /* Damage overlay */
+    #damageOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at center, transparent 0%, rgba(255, 0, 0, 0.6) 100%);
+        pointer-events: none;
+        opacity: 0;
+        z-index: 150;
+        transition: opacity 0.1s ease-in;
+    }
+    #damageOverlay.active {
+        opacity: 1;
+    }
+
+    /* Only show mobile controls on touch devices */
+    @media (pointer: coarse) {
+        #mobileControls { display: block; }
+        #minimap { width: 80px; height: 80px; }
+        .hud-value { font-size: 20px; }
+        .hud-label { font-size: 9px; }
+        #hud {
+            height: 50px;
+            top: 0;
+            bottom: auto;
+            border-top: none;
+            border-bottom: 3px solid #8B0000;
+            background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+        }
+    }
+
+    @media (max-width: 600px) {
+        #minimap { width: 60px; height: 60px; }
+        /* Movement joystick smaller */
+        #joystickArea { width: 100px; height: 100px; left: 10px; bottom: 10px; }
+        #joystickBase { width: 80px; height: 80px; left: 10px; top: 10px; }
+        #joystickThumb { width: 35px; height: 35px; left: 32px; top: 32px; }
+        /* Turn buttons smaller */
+        #turnLeft, #turnRight { width: 50px; height: 50px; font-size: 22px; }
+        #turnLeft { left: 120px; bottom: 70px; }
+        #turnRight { left: 180px; bottom: 70px; }
+        /* Buttons */
+        #fireButton { width: 70px; height: 70px; right: 10px; bottom: 10px; font-size: 11px; }
+        #flipButton { width: 50px; height: 50px; right: 100px; bottom: 20px; font-size: 20px; }
+    }
+
+    /* Extra narrow screens (portrait phones) */
+    @media (max-width: 420px) {
+        /* Movement joystick even smaller */
+        #joystickArea { width: 90px; height: 90px; left: 5px; bottom: 5px; }
+        #joystickBase { width: 70px; height: 70px; left: 10px; top: 10px; }
+        #joystickThumb { width: 30px; height: 30px; left: 30px; top: 30px; }
+        /* Turn buttons even smaller */
+        #turnLeft, #turnRight { width: 45px; height: 45px; font-size: 18px; }
+        #turnLeft { left: 100px; bottom: 60px; }
+        #turnRight { left: 150px; bottom: 60px; }
+        /* Buttons */
+        #fireButton { width: 65px; height: 65px; right: 5px; bottom: 5px; font-size: 10px; }
+        #flipButton { width: 45px; height: 45px; right: 80px; bottom: 15px; font-size: 18px; }
+    }
+
+    /* Mode indicator */
+    #modeIndicator {
+        position: absolute;
+        top: 55px;
+        right: 10px;
+        padding: 5px 10px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 100;
+    }
+    #modeIndicator.easy {
+        border-color: #00ff00;
+        color: #00ff00;
+    }
+    #modeIndicator.normal {
+        border-color: #ff4444;
+        color: #ff4444;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<canvas id="gameCanvas"></canvas>
+<canvas id="minimap"></canvas>
+<div id="damageOverlay"></div>
+
+<div id="mobileControls">
+    <!-- Movement Joystick - Bottom left -->
+    <div id="joystickArea">
+        <div id="joystickBase"></div>
+        <div id="joystickThumb"></div>
+    </div>
+    <!-- Turn Buttons - Next to joystick -->
+    <div id="turnLeft">◀</div>
+    <div id="turnRight">▶</div>
+    <!-- Action Buttons -->
+    <div id="flipButton">☢</div>
+    <div id="fireButton">FIRE</div>
+</div>
+<div id="modeIndicator" class="normal">NORMAL</div>
+
+<div id="hud">
+    <div class="hud-item">
+        <div class="hud-value" id="healthValue">100</div>
+        <div class="hud-label">HEALTH</div>
+    </div>
+    <div class="hud-item">
+        <div class="hud-value" id="ammoValue">50</div>
+        <div class="hud-label">AMMO</div>
+    </div>
+    <div class="hud-item">
+        <div class="hud-value" id="scoreValue">0</div>
+        <div class="hud-label">SCORE</div>
+    </div>
+    <div class="hud-item">
+        <div class="hud-value" id="killsValue">0</div>
+        <div class="hud-label">KILLS</div>
+    </div>
+    <div class="hud-item">
+        <div class="hud-value" id="tokensValue" style="color: #ffcc00;">0</div>
+        <div class="hud-label" style="color: #b4783c;">TOKENS</div>
+    </div>
+    <div class="hud-item">
+        <div class="hud-value" id="weaponValue" style="color: #888888; font-size: 14px;">PISTOL</div>
+        <div class="hud-label">WEAPON</div>
+    </div>
+</div>
+
+<div id="gameOver">
+    <h1>GAME OVER</h1>
+    <p style="color: #888;">Final Score: <span id="finalScore">0</span></p>
+    <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
+    <br>
+    <button onclick="submitScore()">SUBMIT SCORE</button>
+    <button onclick="location.href='/game'">PLAY AGAIN</button>
+    <button onclick="location.href='/'">MAIN MENU</button>
+    <button onclick="openSettings()">SETTINGS</button>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" class="settings-modal">
+    <div class="settings-content">
+        <h2>SETTINGS</h2>
+        <div class="setting-item">
+            <label>AIM SENSITIVITY</label>
+            <input type="range" id="sensitivitySlider" min="1" max="10" value="5">
+            <span id="sensitivityValue">5</span>
+        </div>
+        <div class="setting-item">
+            <label>BUTTON SIZE (MOBILE)</label>
+            <input type="range" id="buttonSizeSlider" min="50" max="150" value="100">
+            <span id="buttonSizeValue">100%</span>
+        </div>
+        <div class="setting-item">
+            <label>DISPLAY MODE</label>
+            <button onclick="toggleFullscreen()" id="fullscreenBtn">ENTER FULLSCREEN</button>
+        </div>
+        <button onclick="saveSettings()">SAVE</button>
+        <button onclick="closeSettings()">CANCEL</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/game.js') }}?v={{ range(1000000) | random }}"></script>
+{% endblock %}

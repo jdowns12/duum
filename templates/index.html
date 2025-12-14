@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block title %}DUUM - Main Menu{% endblock %}
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+    @media (max-width: 600px) {
+        .ascii-art { font-size: 8px !important; }
+        .menu-item { padding: 12px 30px !important; font-size: 18px !important; }
+        .instructions { padding: 15px 20px !important; }
+        .instructions h3 { font-size: 16px !important; }
+        .instructions p { font-size: 12px !important; }
+    }
+
+    .settings-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .settings-modal.active {
+        display: flex;
+    }
+
+    .settings-content {
+        background: linear-gradient(to bottom, #1a0a0a, #0a0000);
+        border: 3px solid #8B0000;
+        padding: 40px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+    }
+
+    .settings-content h2 {
+        color: #ff4444;
+        font-size: 32px;
+        margin-bottom: 30px;
+        text-shadow: 0 0 10px #ff0000;
+        letter-spacing: 3px;
+    }
+
+    .setting-item {
+        margin: 25px 0;
+        text-align: left;
+    }
+
+    .setting-item label {
+        display: block;
+        color: #ff6666;
+        margin-bottom: 10px;
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+
+    .setting-item input[type="range"] {
+        width: 80%;
+        height: 8px;
+        background: #333;
+        border-radius: 4px;
+        outline: none;
+        -webkit-appearance: none;
+    }
+
+    .setting-item input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #ff4444;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px #ff0000;
+    }
+
+    .setting-item input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #ff4444;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px #ff0000;
+        border: none;
+    }
+
+    .setting-item span {
+        color: #ff4444;
+        font-size: 18px;
+        margin-left: 15px;
+        font-weight: bold;
+    }
+
+    .settings-content .menu-item {
+        margin: 10px;
+        display: inline-block;
+        padding: 10px 30px;
+        font-size: 16px;
+    }
+
+    /* Mode Selection Styles */
+    .mode-selection {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .mode-btn {
+        padding: 15px 30px;
+        font-family: 'Courier New', monospace;
+        font-size: 16px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        border: 3px solid #8B0000;
+        background: linear-gradient(to bottom, #1a0a0a, #0a0000);
+        color: #888;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+    }
+
+    .mode-btn:hover {
+        border-color: #ff4444;
+        color: #ff6666;
+    }
+
+    .mode-btn.selected {
+        border-color: #ff4444;
+        color: #ff4444;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        text-shadow: 0 0 10px #ff0000;
+    }
+
+    .mode-description {
+        text-align: center;
+        color: #888;
+        font-size: 12px;
+        margin-top: 10px;
+        letter-spacing: 1px;
+    }
+
+    .mode-description.easy { color: #00ff00; }
+    .mode-description.normal { color: #ff6666; }
+
+    @media (max-width: 600px) {
+        .mode-btn { padding: 12px 20px !important; font-size: 14px !important; }
+        .mode-selection { gap: 10px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="menu-screen">
+    <div class="doom-logo">
+        <pre class="ascii-art">
+ ██████╗ ██╗   ██╗██╗   ██╗███╗   ███╗
+ ██╔══██╗██║   ██║██║   ██║████╗ ████║
+ ██║  ██║██║   ██║██║   ██║██╔████╔██║
+ ██║  ██║██║   ██║██║   ██║██║╚██╔╝██║
+ ██████╔╝╚██████╔╝╚██████╔╝██║ ╚═╝ ██║
+ ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+        </pre>
+    </div>
+
+    <div class="mode-selection">
+        <button id="easyModeBtn" class="mode-btn" onclick="selectMode('easy')">EASY</button>
+        <button id="normalModeBtn" class="mode-btn selected" onclick="selectMode('normal')">NORMAL</button>
+    </div>
+    <div id="modeDescription" class="mode-description normal">Manual shooting - No aim assist</div>
+
+    <div class="menu-options">
+        <a href="#" class="menu-item" id="playBtn" onclick="startGame(); return false;">NEW GAME</a>
+        <a href="/leaderboard" class="menu-item">LEADERBOARD</a>
+        <a href="/gallery" class="menu-item">GALLERY</a>
+        <a href="/changelog" class="menu-item">CHANGELOG</a>
+        <a href="#" class="menu-item" onclick="openSettings(); return false;">SETTINGS</a>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-content">
+            <h2>SETTINGS</h2>
+            <div class="setting-item">
+                <label>AIM SENSITIVITY</label>
+                <input type="range" id="sensitivitySlider" min="1" max="10" value="5">
+                <span id="sensitivityValue">5</span>
+            </div>
+            <div class="setting-item">
+                <label>BUTTON SIZE (MOBILE)</label>
+                <input type="range" id="buttonSizeSlider" min="50" max="150" value="100">
+                <span id="buttonSizeValue">100%</span>
+            </div>
+            <div class="setting-item">
+                <label>DISPLAY MODE</label>
+                <button onclick="toggleFullscreen()" class="menu-item" id="fullscreenBtn">ENTER FULLSCREEN</button>
+            </div>
+            <button onclick="saveSettings()" class="menu-item">SAVE</button>
+            <button onclick="closeSettings()" class="menu-item">CANCEL</button>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h3>CONTROLS</h3>
+        <p>W/S - Move Forward/Back</p>
+        <p>A/D - Strafe Left/Right</p>
+        <p>← → - Turn</p>
+        <p>SPACE - Shoot</p>
+        <p>E - Open Doors (costs tokens)</p>
+        <p>F - NUKE (2min cooldown)</p>
+    </div>
+
+    <div class="footer">
+        <p>Press any key to begin...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Game mode selection
+    let selectedMode = localStorage.getItem('duum_mode') || 'normal';
+
+    function selectMode(mode) {
+        selectedMode = mode;
+        localStorage.setItem('duum_mode', mode);
+
+        // Update button styles
+        document.getElementById('easyModeBtn').classList.toggle('selected', mode === 'easy');
+        document.getElementById('normalModeBtn').classList.toggle('selected', mode === 'normal');
+
+        // Update description
+        const desc = document.getElementById('modeDescription');
+        if (mode === 'easy') {
+            desc.textContent = 'Auto-fire + Aim assist - Great for mobile!';
+            desc.className = 'mode-description easy';
+        } else {
+            desc.textContent = 'Manual shooting - No aim assist';
+            desc.className = 'mode-description normal';
+        }
+    }
+
+    function startGame() {
+        window.location.href = '/game?mode=' + selectedMode;
+    }
+
+    // Initialize mode on page load
+    window.addEventListener('load', () => {
+        selectMode(selectedMode);
+    });
+
+    // Settings functions
+    function openSettings() {
+        document.getElementById('settingsModal').classList.add('active');
+        const savedSens = localStorage.getItem('duum_sensitivity') || 5;
+        document.getElementById('sensitivitySlider').value = savedSens;
+        document.getElementById('sensitivityValue').textContent = savedSens;
+
+        const savedBtnSize = localStorage.getItem('duum_button_size') || 100;
+        document.getElementById('buttonSizeSlider').value = savedBtnSize;
+        document.getElementById('buttonSizeValue').textContent = savedBtnSize + '%';
+    }
+
+    function closeSettings() {
+        document.getElementById('settingsModal').classList.remove('active');
+    }
+
+    function saveSettings() {
+        const sensValue = document.getElementById('sensitivitySlider').value;
+        localStorage.setItem('duum_sensitivity', sensValue);
+
+        const btnSizeValue = document.getElementById('buttonSizeSlider').value;
+        localStorage.setItem('duum_button_size', btnSizeValue);
+
+        closeSettings();
+    }
+
+    // Fullscreen toggle
+    function toggleFullscreen() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+            // Enter fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        } else {
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+
+    // Update fullscreen button text
+    function updateFullscreenBtn() {
+        const btn = document.getElementById('fullscreenBtn');
+        if (btn) {
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
+                btn.textContent = 'EXIT FULLSCREEN';
+            } else {
+                btn.textContent = 'ENTER FULLSCREEN';
+            }
+        }
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenBtn);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
+    document.addEventListener('mozfullscreenchange', updateFullscreenBtn);
+
+    // Update value display when sliders move
+    document.getElementById('sensitivitySlider').addEventListener('input', (e) => {
+        document.getElementById('sensitivityValue').textContent = e.target.value;
+    });
+
+    document.getElementById('buttonSizeSlider').addEventListener('input', (e) => {
+        document.getElementById('buttonSizeValue').textContent = e.target.value + '%';
+    });
+
+    // Load saved values on page load
+    window.addEventListener('load', () => {
+        const savedSens = localStorage.getItem('duum_sensitivity') || 5;
+        document.getElementById('sensitivitySlider').value = savedSens;
+        document.getElementById('sensitivityValue').textContent = savedSens;
+
+        const savedBtnSize = localStorage.getItem('duum_button_size') || 100;
+        document.getElementById('buttonSizeSlider').value = savedBtnSize;
+        document.getElementById('buttonSizeValue').textContent = savedBtnSize + '%';
+    });
+
+    // Press any key to start (but not when settings open)
+    document.addEventListener('keydown', (e) => {
+        if (!document.getElementById('settingsModal').classList.contains('active')) {
+            if (e.key !== 'Escape') {
+                startGame();
+            }
+        } else if (e.key === 'Escape') {
+            closeSettings();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,15 @@
+[Unit]
+Description=DOOM Game Server
+After=network.target
+
+[Service]
+Type=simple
+User=jadondowns
+WorkingDirectory=/home/jadondowns/projects/doom
+ExecStart=/home/jadondowns/projects/doom/.venv/bin/python app.py
+Restart=always
+RestartSec=3
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

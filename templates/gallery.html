@@ -1,0 +1,485 @@
+{% extends "base.html" %}
+
+{% block title %}DUUM - Gallery{% endblock %}
+
+{% block head %}
+<style>
+    .back-btn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 45px;
+        height: 45px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid #8B0000;
+        border-radius: 5px;
+        color: #ff4444;
+        font-size: 28px;
+        cursor: pointer;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .back-btn:hover {
+        background: #8B0000;
+        color: #fff;
+    }
+    .gallery-screen {
+        padding: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .gallery-title {
+        color: #ff4444;
+        font-size: 48px;
+        text-align: center;
+        text-shadow: 0 0 20px #ff0000;
+        margin-bottom: 30px;
+        letter-spacing: 5px;
+    }
+
+    .gallery-section {
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        color: #ff6666;
+        font-size: 28px;
+        border-bottom: 2px solid #8B0000;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        letter-spacing: 3px;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .gallery-item {
+        background: linear-gradient(to bottom, #1a0a0a, #0a0000);
+        border: 2px solid #8B0000;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .gallery-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+
+    .item-preview {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 60px;
+    }
+
+    .item-preview canvas {
+        display: block;
+    }
+
+    .item-name {
+        color: #ff4444;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-shadow: 0 0 10px #ff0000;
+    }
+
+    .item-desc {
+        color: #888;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .item-stats {
+        color: #ff6666;
+        font-size: 11px;
+        margin-top: 10px;
+        text-align: left;
+    }
+
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 3px 0;
+    }
+
+    .menu-options {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .menu-item {
+        display: inline-block;
+        background: linear-gradient(to bottom, #8B0000, #4a0000);
+        color: #fff;
+        padding: 12px 30px;
+        text-decoration: none;
+        font-size: 18px;
+        margin: 10px;
+        border: 2px solid #ff4444;
+        transition: all 0.3s;
+    }
+
+    .menu-item:hover {
+        background: linear-gradient(to bottom, #ff0000, #8B0000);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+
+    @media (max-width: 600px) {
+        .gallery-title { font-size: 32px; }
+        .section-title { font-size: 22px; }
+        .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+        .item-preview { width: 80px; height: 80px; font-size: 50px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/" class="back-btn">←</a>
+<div class="gallery-screen">
+    <h1 class="gallery-title">GALLERY</h1>
+
+    <div class="gallery-section">
+        <h2 class="section-title">FLOATING BEINGS (Even Waves)</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="blueEnemy" width="80" height="80"></canvas>
+                </div>
+                <div class="item-name">SPECTER</div>
+                <div class="item-desc">Standard floating demon. The backbone of the horde.</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>30</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Normal</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>10</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="blackEnemy" width="80" height="80"></canvas>
+                </div>
+                <div class="item-name">SHADOW</div>
+                <div class="item-desc">Fast and deadly. Harder to hit due to speed.</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>30</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Fast</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>10</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="whiteEnemy" width="80" height="80"></canvas>
+                </div>
+                <div class="item-name">GHOST</div>
+                <div class="item-desc">Tanky enemy. Takes more hits to kill.</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>31</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Normal</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>10</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="smallEnemy" width="80" height="80"></canvas>
+                </div>
+                <div class="item-name">IMP</div>
+                <div class="item-desc">Tiny but extremely fast. Hard to hit!</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>15</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Very Fast</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>5</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview" style="font-size: 70px;">🔥</div>
+                <div class="item-name">FIRE DEMON</div>
+                <div class="item-desc">Spawns 3 enemies when killed. Handle with care!</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>25</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Fast</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>10</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="gallery-section">
+        <h2 class="section-title">ZOMBIES (Odd Waves)</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="zombieEnemy" width="80" height="100"></canvas>
+                </div>
+                <div class="item-name">ZOMBIE</div>
+                <div class="item-desc">Walking undead. Gets stronger each wave!</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>30+</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Normal+</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>10+</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="crawlerEnemy" width="80" height="100"></canvas>
+                </div>
+                <div class="item-name">CRAWLER</div>
+                <div class="item-desc">Fast zombie that crawls along the ground.</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>20</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Very Fast</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>5+</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="tankEnemy" width="80" height="100"></canvas>
+                </div>
+                <div class="item-name">TANK ZOMBIE</div>
+                <div class="item-desc">Massive zombie. Slow but extremely tough!</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>50+</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Slow</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>10+</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="fireZombie" width="80" height="100"></canvas>
+                </div>
+                <div class="item-name">FIRE ZOMBIE</div>
+                <div class="item-desc">Burning zombie. Spawns 3 more on death!</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>25</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Normal+</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>10+</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="gallery-section">
+        <h2 class="section-title">BOSSES</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="bossEnemy" width="80" height="80"></canvas>
+                </div>
+                <div class="item-name">BOSS</div>
+                <div class="item-desc">Appears every 10 waves. Massive and powerful!</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Health:</span><span>75+</span></div>
+                    <div class="stat-row"><span>Speed:</span><span>Normal</span></div>
+                    <div class="stat-row"><span>Damage:</span><span>20</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="gallery-section">
+        <h2 class="section-title">PICKUPS</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="item-preview" style="font-size: 60px;">☢</div>
+                <div class="item-name">NUKE PICKUP</div>
+                <div class="item-desc">Instantly activates nuke, killing all enemies!</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Spawn:</span><span>Every 10 waves</span></div>
+                    <div class="stat-row"><span>Effect:</span><span>Kill all enemies</span></div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="item-preview">
+                    <canvas id="ammoPickup" width="80" height="50"></canvas>
+                </div>
+                <div class="item-name">AMMO BOX</div>
+                <div class="item-desc">Restores ammunition for your weapon.</div>
+                <div class="item-stats">
+                    <div class="stat-row"><span>Spawn:</span><span>40% per wave</span></div>
+                    <div class="stat-row"><span>Effect:</span><span>+50 Ammo</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-options">
+        <a href="/" class="menu-item">MAIN MENU</a>
+        <a href="/game" class="menu-item">PLAY GAME</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Helper function to draw a zombie
+    function drawZombie(ctx, skinColor, shirtColor, pantsColor, extraFeature = null) {
+        const x = 40, y = 10;
+        const size = 70;
+
+        // Legs
+        ctx.fillStyle = pantsColor;
+        ctx.fillRect(x - size * 0.2, y + size * 0.55, size * 0.15, size * 0.35);
+        ctx.fillRect(x + size * 0.05, y + size * 0.55, size * 0.15, size * 0.35);
+
+        // Torso
+        ctx.fillStyle = shirtColor;
+        ctx.fillRect(x - size * 0.25, y + size * 0.25, size * 0.5, size * 0.35);
+
+        // Torn shirt detail
+        ctx.fillStyle = skinColor;
+        ctx.fillRect(x - size * 0.05, y + size * 0.3, size * 0.12, size * 0.15);
+
+        // Head
+        ctx.fillStyle = skinColor;
+        ctx.fillRect(x - size * 0.2, y, size * 0.4, size * 0.28);
+
+        // Arms (reaching out)
+        ctx.save();
+        ctx.translate(x - size * 0.3, y + size * 0.3);
+        ctx.rotate(-0.5);
+        ctx.fillStyle = skinColor;
+        ctx.fillRect(-5, 0, 8, size * 0.35);
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(x + size * 0.3, y + size * 0.3);
+        ctx.rotate(0.5);
+        ctx.fillStyle = skinColor;
+        ctx.fillRect(-3, 0, 8, size * 0.35);
+        ctx.restore();
+
+        // Eyes (glowing)
+        ctx.fillStyle = '#ff3232';
+        ctx.fillRect(x - size * 0.12, y + size * 0.08, 7, 7);
+        ctx.fillRect(x + size * 0.05, y + size * 0.08, 7, 7);
+
+        // Mouth
+        ctx.fillStyle = '#281414';
+        ctx.fillRect(x - size * 0.08, y + size * 0.18, size * 0.16, 5);
+
+        // Blood details
+        ctx.fillStyle = '#961414';
+        ctx.fillRect(x - size * 0.15, y + size * 0.12, 4, 8);
+
+        // Extra feature (like fire)
+        if (extraFeature === 'fire') {
+            ctx.font = '25px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🔥', x, y - 5);
+        }
+    }
+
+    // Draw Blue Enemy
+    const blueCtx = document.getElementById('blueEnemy').getContext('2d');
+    blueCtx.fillStyle = '#1e64ff';
+    blueCtx.fillRect(10, 10, 60, 60);
+    blueCtx.fillStyle = '#ffff00';
+    blueCtx.fillRect(20, 25, 10, 10);
+    blueCtx.fillRect(45, 25, 10, 10);
+
+    // Draw Black Enemy
+    const blackCtx = document.getElementById('blackEnemy').getContext('2d');
+    blackCtx.fillStyle = '#141414';
+    blackCtx.fillRect(10, 10, 60, 60);
+    blackCtx.fillStyle = '#ffffff';
+    blackCtx.fillRect(20, 25, 10, 10);
+    blackCtx.fillRect(45, 25, 10, 10);
+
+    // Draw White Enemy
+    const whiteCtx = document.getElementById('whiteEnemy').getContext('2d');
+    whiteCtx.fillStyle = '#f0f0f0';
+    whiteCtx.fillRect(10, 10, 60, 60);
+    whiteCtx.fillStyle = '#ff0000';
+    whiteCtx.fillRect(20, 25, 10, 10);
+    whiteCtx.fillRect(45, 25, 10, 10);
+
+    // Draw Small Enemy (Imp)
+    const smallCtx = document.getElementById('smallEnemy').getContext('2d');
+    smallCtx.fillStyle = '#32dc32';
+    smallCtx.fillRect(25, 25, 30, 30);
+    smallCtx.fillStyle = '#ff3232';
+    smallCtx.fillRect(30, 32, 6, 6);
+    smallCtx.fillRect(42, 32, 6, 6);
+
+    // Draw Regular Zombie
+    const zombieCtx = document.getElementById('zombieEnemy').getContext('2d');
+    drawZombie(zombieCtx, '#788c6e', '#503c32', '#32323c');
+
+    // Draw Crawler Zombie (smaller, greenish)
+    const crawlerCtx = document.getElementById('crawlerEnemy').getContext('2d');
+    crawlerCtx.save();
+    crawlerCtx.scale(0.7, 0.7);
+    crawlerCtx.translate(15, 20);
+    drawZombie(crawlerCtx, '#647864', '#3c503c', '#28322b');
+    crawlerCtx.restore();
+
+    // Draw Tank Zombie (bigger, bluish)
+    const tankCtx = document.getElementById('tankEnemy').getContext('2d');
+    tankCtx.save();
+    tankCtx.scale(1.1, 1.1);
+    tankCtx.translate(-5, -5);
+    drawZombie(tankCtx, '#505064', '#323246', '#1e1e28');
+    tankCtx.restore();
+
+    // Draw Fire Zombie
+    const fireZombieCtx = document.getElementById('fireZombie').getContext('2d');
+    drawZombie(fireZombieCtx, '#c86432', '#ff6400', '#503214', 'fire');
+
+    // Draw Boss
+    const bossCtx = document.getElementById('bossEnemy').getContext('2d');
+    // Horns - long and brown
+    bossCtx.fillStyle = '#8B4513';
+    bossCtx.beginPath();
+    bossCtx.moveTo(12, 20);
+    bossCtx.lineTo(-5, -5);
+    bossCtx.lineTo(22, 15);
+    bossCtx.fill();
+    bossCtx.beginPath();
+    bossCtx.moveTo(68, 20);
+    bossCtx.lineTo(85, -5);
+    bossCtx.lineTo(58, 15);
+    bossCtx.fill();
+    // Body
+    bossCtx.fillStyle = '#dc1414';
+    bossCtx.fillRect(5, 15, 70, 60);
+    // Yellow streaks
+    bossCtx.fillStyle = '#ffdc00';
+    for (let i = 0; i < 3; i++) {
+        bossCtx.fillRect(5, 30 + i * 15, 70, 5);
+    }
+    // Eyes
+    bossCtx.fillStyle = '#ff9600';
+    bossCtx.fillRect(18, 22, 12, 12);
+    bossCtx.fillRect(48, 22, 12, 12);
+
+    // Draw Ammo Pickup
+    const ammoCtx = document.getElementById('ammoPickup').getContext('2d');
+    ammoCtx.fillStyle = '#00c800';
+    ammoCtx.fillRect(10, 10, 60, 30);
+    ammoCtx.fillStyle = '#64ff64';
+    ammoCtx.fillRect(10, 10, 60, 8);
+    ammoCtx.fillStyle = '#ffffff';
+    ammoCtx.font = 'bold 12px Arial';
+    ammoCtx.textAlign = 'center';
+    ammoCtx.fillText('AMMO', 40, 30);
+</script>
+{% endblock %}

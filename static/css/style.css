@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0a0a0a;
+    color: #ff4444;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Main Menu */
+.menu-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.doom-logo {
+    margin-bottom: 40px;
+}
+
+.ascii-art {
+    color: #8B0000;
+    font-size: 12px;
+    line-height: 1.2;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #8B0000;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.menu-item {
+    display: block;
+    padding: 15px 50px;
+    background: linear-gradient(to bottom, #2a0000, #1a0000);
+    border: 2px solid #8B0000;
+    color: #ff4444;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+    background: linear-gradient(to bottom, #4a0000, #3a0000);
+    border-color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+    transform: scale(1.05);
+}
+
+.instructions {
+    background: rgba(139, 0, 0, 0.2);
+    padding: 20px 40px;
+    border: 1px solid #8B0000;
+    margin-bottom: 30px;
+}
+
+.instructions h3 {
+    color: #ff6666;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.instructions p {
+    color: #888;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.footer {
+    color: #666;
+    font-size: 16px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Leaderboard */
+.leaderboard-screen {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.doom-title {
+    color: #8B0000;
+    font-size: 48px;
+    text-shadow: 0 0 20px #ff0000;
+    margin-bottom: 40px;
+    letter-spacing: 5px;
+}
+
+.scores-table {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: rgba(20, 0, 0, 0.8);
+}
+
+.scores-table th {
+    background: #8B0000;
+    color: #fff;
+    padding: 15px;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.scores-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #330000;
+    color: #cc4444;
+    font-size: 14px;
+}
+
+.scores-table tr:hover {
+    background: rgba(139, 0, 0, 0.3);
+}
+
+.scores-table .top-score td {
+    color: #ffaa00;
+    font-weight: bold;
+}
+
+.scores-table tr:nth-child(1).top-score td {
+    color: #ffd700;
+    text-shadow: 0 0 10px #ffd700;
+}

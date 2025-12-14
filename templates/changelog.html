@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+
+{% block title %}DUUM - Changelog{% endblock %}
+
+{% block head %}
+<style>
+    .back-btn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 45px;
+        height: 45px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid #8B0000;
+        border-radius: 5px;
+        color: #ff4444;
+        font-size: 28px;
+        cursor: pointer;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .back-btn:hover {
+        background: #8B0000;
+        color: #fff;
+    }
+
+    .changelog-screen {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .changelog-title {
+        color: #ff4444;
+        font-size: 36px;
+        text-align: center;
+        margin-bottom: 30px;
+        text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        letter-spacing: 5px;
+    }
+
+    .version-block {
+        background: linear-gradient(to bottom, #1a0a0a, #0a0000);
+        border: 2px solid #8B0000;
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+
+    .version-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #8B0000;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+
+    .version-number {
+        color: #ff4444;
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    }
+
+    .version-date {
+        color: #888;
+        font-size: 14px;
+    }
+
+    .version-subtitle {
+        color: #ffcc00;
+        font-size: 16px;
+        margin-bottom: 15px;
+        font-style: italic;
+    }
+
+    .change-category {
+        margin-bottom: 15px;
+    }
+
+    .category-title {
+        color: #00ff00;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+    }
+
+    .category-title.fix { color: #ff6666; }
+    .category-title.feature { color: #00ff00; }
+    .category-title.improvement { color: #00ccff; }
+    .category-title.balance { color: #ffcc00; }
+
+    .change-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .change-list li {
+        color: #ccc;
+        font-size: 14px;
+        padding: 5px 0;
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .change-list li::before {
+        content: ">";
+        position: absolute;
+        left: 0;
+        color: #ff4444;
+    }
+
+    .menu-options {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .menu-item {
+        display: inline-block;
+        padding: 12px 30px;
+        margin: 10px;
+        background: linear-gradient(to bottom, #1a0a0a, #0a0000);
+        border: 2px solid #8B0000;
+        color: #ff4444;
+        text-decoration: none;
+        font-family: 'Courier New', monospace;
+        font-size: 16px;
+        letter-spacing: 2px;
+        transition: all 0.2s;
+    }
+
+    .menu-item:hover {
+        background: #8B0000;
+        color: #fff;
+        text-shadow: 0 0 10px #ff0000;
+    }
+
+    @media (max-width: 600px) {
+        .changelog-title { font-size: 28px; }
+        .version-number { font-size: 20px; }
+        .changelog-screen { padding: 10px; padding-top: 60px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/" class="back-btn">&larr;</a>
+<div class="changelog-screen">
+    <h1 class="changelog-title">CHANGELOG</h1>
+
+    <div class="version-block">
+        <div class="version-header">
+            <span class="version-number">v1.4.0</span>
+            <span class="version-date">November 30, 2025</span>
+        </div>
+        <div class="version-subtitle">Map Expansion Update</div>
+
+        <div class="change-category">
+            <div class="category-title feature">New Features</div>
+            <ul class="change-list">
+                <li>Massive map expansion - 24x24 tiles (was 16x16)</li>
+                <li>4 distinct rooms connected by locked doors</li>
+                <li>Room 1: Starting arena with cover pillars</li>
+                <li>Room 2: Side corridor (accessible through door)</li>
+                <li>Room 3: Back hall with more pillars</li>
+                <li>Room 4: Boss arena for late-game fights</li>
+                <li>Dynamic door pricing - farther doors cost more tokens</li>
+            </ul>
+        </div>
+
+        <div class="change-category">
+            <div class="category-title improvement">Improvements</div>
+            <ul class="change-list">
+                <li>Doors now scan from map automatically</li>
+                <li>Opening doors spawns enemies from new areas</li>
+                <li>Controls screen now shows E key for doors</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="version-block">
+        <div class="version-header">
+            <span class="version-number">v1.3.0</span>
+            <span class="version-date">November 30, 2025</span>
+        </div>
+        <div class="version-subtitle">DOOM-Style Shooting Overhaul</div>
+
+        <div class="change-category">
+            <div class="category-title feature">New Features</div>
+            <ul class="change-list">
+                <li>Multi-pellet shotgun system - Shotgun now fires 7 pellets like classic DOOM</li>
+                <li>Each pellet can hit different enemies for crowd control</li>
+                <li>Hit markers - Crosshair flashes red when you land a shot</li>
+                <li>Floating damage numbers - See damage dealt floating up from enemies</li>
+                <li>Easy mode autoaim - Shots snap to nearby enemies (~5.6&deg; cone)</li>
+            </ul>
+        </div>
+
+        <div class="change-category">
+            <div class="category-title improvement">Improvements</div>
+            <ul class="change-list">
+                <li>Per-enemy hitbox sizes - Bosses are easier to hit, small enemies harder</li>
+                <li>Minimum hitbox angle - Distant enemies no longer impossible to hit</li>
+                <li>Chaingun now has slight spread for more realistic feel</li>
+            </ul>
+        </div>
+
+        <div class="change-category">
+            <div class="category-title balance">Balance Changes</div>
+            <ul class="change-list">
+                <li>Shotgun: 40 dmg &rarr; 8 dmg x7 pellets (56 max if all hit)</li>
+                <li>Boss hitbox: 30 radius (big target)</li>
+                <li>Small enemy hitbox: 10 radius (harder to hit)</li>
+                <li>Zombie Tank hitbox: 25 radius</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="version-block">
+        <div class="version-header">
+            <span class="version-number">v1.2.0</span>
+            <span class="version-date">November 30, 2025</span>
+        </div>
+        <div class="version-subtitle">Map & Spawn Fixes</div>
+
+        <div class="change-category">
+            <div class="category-title feature">New Features</div>
+            <ul class="change-list">
+                <li>New arena-style map with pillars for cover</li>
+                <li>Player spawns in center facing locked doors</li>
+                <li>Two locked doors lead to back areas</li>
+            </ul>
+        </div>
+
+        <div class="change-category">
+            <div class="category-title fix">Bug Fixes</div>
+            <ul class="change-list">
+                <li>Fixed enemies spawning in locked/inaccessible areas</li>
+                <li>Added reachability check (BFS) for all enemy spawns</li>
+                <li>Enemies now only spawn where player can reach them</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="version-block">
+        <div class="version-header">
+            <span class="version-number">v1.1.0</span>
+            <span class="version-date">November 2025</span>
+        </div>
+        <div class="version-subtitle">Mobile Controls Update</div>
+
+        <div class="change-category">
+            <div class="category-title feature">New Features</div>
+            <ul class="change-list">
+                <li>Easy/Normal difficulty modes with separate leaderboards</li>
+                <li>Easy mode: Auto-fire + aim assist for mobile players</li>
+                <li>Movement joystick (left side)</li>
+                <li>Turn buttons for rotation</li>
+                <li>Fire and Nuke buttons</li>
+            </ul>
+        </div>
+
+        <div class="change-category">
+            <div class="category-title improvement">Improvements</div>
+            <ul class="change-list">
+                <li>Touch controls optimized for mobile devices</li>
+                <li>Settings for sensitivity and button size</li>
+                <li>HUD moves to top on mobile for better reach</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="version-block">
+        <div class="version-header">
+            <span class="version-number">v1.0.0</span>
+            <span class="version-date">November 2025</span>
+        </div>
+        <div class="version-subtitle">Initial Release</div>
+
+        <div class="change-category">
+            <div class="category-title feature">Features</div>
+            <ul class="change-list">
+                <li>DOOM-style raycasting 3D engine</li>
+                <li>Multiple enemy types: Zombies, Floating beings, Bosses</li>
+                <li>5 weapons: Pistol, Shotgun, Plasma, Chaingun, BFG 9000</li>
+                <li>Wave-based survival gameplay</li>
+                <li>Mystery boxes with random buffs</li>
+                <li>Nuke ability (2 minute cooldown)</li>
+                <li>Token system for upgrades</li>
+                <li>Leaderboards</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="menu-options">
+        <a href="/game" class="menu-item">PLAY GAME</a>
+        <a href="/" class="menu-item">MAIN MENU</a>
+    </div>
+</div>
+{% endblock %}
