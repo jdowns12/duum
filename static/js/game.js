@@ -102,16 +102,19 @@ function initMusic() {
         bgMusic.volume = 0.5;
         bgMusic.muted = musicMuted;
         updateMusicButton();
-        // Autoplay requires user interaction, so we try on first click/touch
-        const startMusic = () => {
-            bgMusic.play().catch(() => {});
-            document.removeEventListener('click', startMusic);
-            document.removeEventListener('touchstart', startMusic);
-            document.removeEventListener('keydown', startMusic);
-        };
-        document.addEventListener('click', startMusic);
-        document.addEventListener('touchstart', startMusic);
-        document.addEventListener('keydown', startMusic);
+        // Try to autoplay immediately
+        bgMusic.play().catch(() => {
+            // If blocked, fall back to user interaction
+            const startMusic = () => {
+                bgMusic.play().catch(() => {});
+                document.removeEventListener('click', startMusic);
+                document.removeEventListener('touchstart', startMusic);
+                document.removeEventListener('keydown', startMusic);
+            };
+            document.addEventListener('click', startMusic);
+            document.addEventListener('touchstart', startMusic);
+            document.addEventListener('keydown', startMusic);
+        });
     }
 }
 
