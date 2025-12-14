@@ -158,6 +158,9 @@
 {% endblock %}
 
 {% block content %}
+<audio id="bgMusic" loop preload="auto">
+    <source src="{{ url_for('static', filename='audio/AUDIO_0437.mp3') }}" type="audio/mpeg">
+</audio>
 <div class="menu-screen">
     <div class="doom-logo">
         <pre class="ascii-art">
@@ -199,6 +202,10 @@
                 <span id="buttonSizeValue">100%</span>
             </div>
             <div class="setting-item">
+                <label>MUSIC</label>
+                <button onclick="toggleMusic()" class="menu-item" id="musicBtn">MUTE</button>
+            </div>
+            <div class="setting-item">
                 <label>DISPLAY MODE</label>
                 <button onclick="toggleFullscreen()" class="menu-item" id="fullscreenBtn">ENTER FULLSCREEN</button>
             </div>
@@ -225,6 +232,46 @@
 
 {% block scripts %}
 <script>
+    // Background Music
+    const bgMusic = document.getElementById('bgMusic');
+    let musicMuted = localStorage.getItem('duum_music_muted') === 'true';
+
+    function initMusic() {
+        if (bgMusic) {
+            bgMusic.volume = 0.5;
+            bgMusic.muted = musicMuted;
+            updateMusicButton();
+            // Autoplay requires user interaction
+            const startMusic = () => {
+                bgMusic.play().catch(() => {});
+                document.removeEventListener('click', startMusic);
+                document.removeEventListener('touchstart', startMusic);
+                document.removeEventListener('keydown', startMusic);
+            };
+            document.addEventListener('click', startMusic);
+            document.addEventListener('touchstart', startMusic);
+            document.addEventListener('keydown', startMusic);
+        }
+    }
+
+    function updateMusicButton() {
+        const btn = document.getElementById('musicBtn');
+        if (btn) {
+            btn.textContent = musicMuted ? 'UNMUTE' : 'MUTE';
+        }
+    }
+
+    function toggleMusic() {
+        musicMuted = !musicMuted;
+        localStorage.setItem('duum_music_muted', musicMuted);
+        if (bgMusic) {
+            bgMusic.muted = musicMuted;
+        }
+        updateMusicButton();
+    }
+
+    initMusic();
+
     // Game mode selection
     let selectedMode = localStorage.getItem('duum_mode') || 'normal';
 
