@@ -54,6 +54,6 @@ Browser-based DOOM-style raycasting 3D shooter game with leaderboards.
 - Flask, Flask-SQLAlchemy, python-dotenv
 
 ## Notes
-- No git repo
+- GitHub: https://github.com/jdowns12/duum
 - Development server (not production WSGI)
 - Local access only
